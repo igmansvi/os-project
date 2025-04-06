@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcessOptimizeAI Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-blue-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">ProcessOptimizeAI Dashboard</h1>
+            <p class="text-sm">CPU Scheduling Algorithm Simulator</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Configuration Panel -->
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">Scheduling Configuration</h2>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Algorithm</label>
+                    <select id="algorithm-select" class="w-full p-2 border rounded">
+                        <option value="fcfs">First Come First Served (FCFS)</option>
+                        <option value="sjf">Shortest Job First (SJF)</option>
+                        <option value="srt">Shortest Remaining Time (SRT)</option>
+                        <option value="priority">Priority Scheduling</option>
+                        <option value="round-robin">Round Robin</option>
+                        <option value="hrrn">Highest Response Ratio Next (HRRN)</option>
+                        <option value="mlq">Multi-Level Queue (MLQ)</option>
+                    </select>
+                </div>
+
+                <div id="preemptive-container" class="mb-4">
+                    <label class="flex items-center text-gray-700 mb-2">
+                        <input type="checkbox" id="preemptive-toggle" class="mr-2">
+                        Preemptive Mode
+                    </label>
+                    <p class="text-xs text-gray-600">Enables process preemption for applicable algorithms</p>
+                </div>
+
+                <div id="rr-quantum-container" class="mb-4 hidden">
+                    <label class="block text-gray-700 mb-2">Time Quantum (for Round Robin)</label>
+                    <input type="number" id="time-quantum" class="w-full p-2 border rounded" value="2" min="1">
+                </div>
+
+                <div id="mlq-config-container" class="mb-4 hidden">
+                    <label class="block text-gray-700 mb-2">MLQ Queue Count</label>
+                    <input type="number" id="mlq-queue-count" class="w-full p-2 border rounded" value="3" min="2"
+                        max="5">
+                    <p class="text-xs text-gray-600 mt-1">Higher priority queues will be serviced first</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Number of Processes</label>
+                    <input type="number" id="process-count" class="w-full p-2 border rounded" value="5" min="1"
+                        max="10">
+                </div>
+
+                <button id="generate-processes" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Generate Processes
+                </button>
+
+                <hr class="my-4">
+
+                <h3 class="font-semibold mb-2">Simulation Controls</h3>
+                <div class="flex space-x-2">
+                    <button id="start-simulation" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                        Start
+                    </button>
+                    <button id="pause-simulation" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                        disabled>
+                        Pause
+                    </button>
+                    <button id="reset-simulation" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                        disabled>
+                        Reset
+                    </button>
+                    <button id="step-simulation" class="bg-purple-500 text-white px-3 py-1 rounded hover:bg-purple-600">
+                        Step
+                    </button>
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-gray-700 mb-2">Simulation Speed</label>
+                    <input type="range" id="simulation-speed" class="w-full" min="1" max="10" value="5">
+                </div>
+            </div>
+
+            <!-- Process List -->
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">Process Queue</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-2">PID</th>
+                                <th class="p-2">Arrival</th>
+                                <th class="p-2">Burst</th>
+                                <th class="p-2">Priority</th>
+                                <th class="p-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="process-table-body">
+                            <!-- Processes will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">Performance Metrics</h2>
+                <div id="metrics" class="grid grid-cols-2 gap-2">
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">Average Waiting Time</div>
+                        <div id="avg-waiting-time" class="text-xl font-bold">0.0 ms</div>
+                    </div>
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">Average Turnaround Time</div>
+                        <div id="avg-turnaround-time" class="text-xl font-bold">0.0 ms</div>
+                    </div>
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">Throughput</div>
+                        <div id="throughput" class="text-xl font-bold">0.0 proc/ms</div>
+                    </div>
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">CPU Utilization</div>
+                        <div id="cpu-utilization" class="text-xl font-bold">0%</div>
+                    </div>
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">Context Switches</div>
+                        <div id="context-switches" class="text-xl font-bold">0</div>
+                    </div>
+                    <div class="bg-gray-100 p-2 rounded">
+                        <div class="text-sm text-gray-500">Current Time</div>
+                        <div id="current-time" class="text-xl font-bold">0 ms</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gantt Chart -->
+        <div class="bg-white p-4 rounded shadow mt-4">
+            <h2 class="text-xl font-semibold mb-4">Gantt Chart</h2>
+            <div id="gantt-chart" class="h-16 bg-gray-100 rounded"></div>
+        </div>
+
+        <!-- Algorithm Visualization & Process Comparison -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">Algorithm Visualization</h2>
+                <div id="algorithm-visualization" class="bg-gray-100 p-3 rounded h-64 overflow-auto">
+                    <div class="text-center text-gray-500 py-10">Select an algorithm to see visualization</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">Algorithm Comparison</h2>
+                <div class="mb-3">
+                    <button id="compare-algorithms"
+                        class="bg-indigo-500 text-white px-3 py-1 rounded hover:bg-indigo-600">
+                        Compare Current Process Set
+                    </button>
+                </div>
+                <div id="algorithm-comparison" class="bg-gray-100 p-3 rounded h-52 overflow-auto">
+                    <div class="text-center text-gray-500 py-10">Click "Compare" to see results across algorithms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CPU Utilization & AI Suggestions -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">CPU Utilization Over Time</h2>
+                <canvas id="cpu-chart" height="200"></canvas>
+            </div>
+
+            <div class="bg-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-4">AI Optimization Suggestions</h2>
+                <div id="ai-suggestions" class="p-3 bg-blue-50 rounded border border-blue-200 text-sm">
+                    <p class="font-semibold">Waiting for simulation data to analyze...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>ProcessOptimizeAI Dashboard - CPU Scheduling Simulator</p>
+            <p class="text-sm mt-1">© 2023 All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/schedulers.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
