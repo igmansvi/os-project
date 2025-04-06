@@ -6,15 +6,16 @@ Welcome to the ProcessOptimizeAI Dashboard project. This tool simulates and visu
 
 1. [Overview](#overview)
 2. [Project Structure](#project-structure)
-3. [Key Features](#key-features)
-4. [Prerequisites](#prerequisites)
-5. [Installation & Setup](#installation--setup)
-6. [Usage](#usage)
-7. [Scheduling Algorithms](#scheduling-algorithms)
-8. [API Simulation](#api-simulation)
-9. [UI Components](#ui-components)
-10. [Dashboard Components](#dashboard-components)
-11. [Author & License](#author--license)
+3. [Workflow Chart](#workflow-chart)
+4. [Key Features](#key-features)
+5. [Prerequisites](#prerequisites)
+6. [Installation & Setup](#installation--setup)
+7. [Usage](#usage)
+8. [Scheduling Algorithms](#scheduling-algorithms)
+9. [API Simulation](#api-simulation)
+10. [UI Components](#ui-components)
+11. [Dashboard Components](#dashboard-components)
+12. [Author & License](#author--license)
 
 ---
 
@@ -58,6 +59,22 @@ os-project
   Handles UI rendering for charts, process lists, Gantt charts, and algorithm visualizations.
 - **js/main.js**  
   Initializes the application workflow, ties together the UI renders, scheduling algorithm calls, and AI suggestions.
+
+## Workflow Chart
+
+```mermaid
+flowchart TD
+    A[Process Generator] --> B[Core Scheduler Module]
+    B --> C[Execution Timeline]
+
+    A --> D[User Input UI]
+    B --> E[Performance Metrics]
+    C --> F[Analytics Module]
+
+    D --> G[Simulation Controls]
+    G --> H[Gantt Chart Display]
+    H --> I[AI Optimizer Module]
+```
 
 ## Key Features
 
