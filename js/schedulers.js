@@ -172,37 +172,6 @@ const Schedulers = {
   },
 
   /**
-   * Highest Response Ratio Next (HRRN) scheduling algorithm
-   * @param {Array} processes - Array of process objects
-   * @param {number} currentTime - Current simulation time
-   * @returns {Object} Result object containing selected process and status
-   */
-  hrrn: function (processes, currentTime) {
-    // Filter processes that have arrived and not completed
-    const readyProcesses = processes.filter(
-      (p) => p.arrivalTime <= currentTime && p.status !== "completed"
-    );
-
-    if (readyProcesses.length === 0) {
-      return { selectedProcess: null, status: "idle" };
-    }
-
-    // Calculate response ratio for each process: (W + S) / S
-    // Where W is waiting time and S is service time (burst time)
-    readyProcesses.forEach((process) => {
-      const waitingTime = currentTime - process.arrivalTime;
-      process.responseRatio =
-        (waitingTime + process.burstTime) / process.burstTime;
-    });
-
-    // Sort by response ratio (highest first)
-    readyProcesses.sort((a, b) => b.responseRatio - a.responseRatio);
-
-    // Select the process with highest response ratio
-    return { selectedProcess: readyProcesses[0], status: "running" };
-  },
-
-  /**
    * Multi-Level Queue (MLQ) scheduling algorithm
    * @param {Array} processes - Array of process objects
    * @param {number} currentTime - Current simulation time
@@ -270,8 +239,6 @@ const Schedulers = {
           return this.srt(processes, currentTime);
         case "priority":
           return this.priority(processes, currentTime);
-        case "hrrn":
-          return this.hrrn(processes, currentTime);
         default:
           return this.fcfs(processes, currentTime);
       }
@@ -418,7 +385,6 @@ const Schedulers = {
       "srt",
       "priority",
       "round-robin",
-      "hrrn",
       "mlq",
     ];
     const results = {};
@@ -474,9 +440,6 @@ const Schedulers = {
               currentQuantumUsed
             );
             currentQuantumUsed = schedulerResult.quantumUsed;
-            break;
-          case "hrrn":
-            schedulerResult = this.hrrn(processes, currentTime);
             break;
           case "mlq":
             schedulerResult = this.mlq(processes, currentTime, queueCount);

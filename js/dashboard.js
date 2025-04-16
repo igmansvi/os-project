@@ -402,9 +402,6 @@ const Dashboard = {
         );
         this.currentQuantumUsed = schedulerResult.quantumUsed;
         break;
-      case "hrrn":
-        schedulerResult = Schedulers.hrrn(this.processes, this.currentTime);
-        break;
       case "mlq":
         schedulerResult = Schedulers.mlq(
           this.processes,

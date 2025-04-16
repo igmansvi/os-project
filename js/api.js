@@ -88,7 +88,7 @@ const API = {
     }
 
     // Check waiting time
-    if (metrics.avgWaitingTime > 5) {
+    if (metrics.avgWaitingTime > 10) {
       suggestions.bottlenecks.push("High average waiting time detected.");
 
       if (algorithm === "fcfs") {

@@ -447,9 +447,6 @@ const UI = {
       case "priority":
         sortedQueue.sort((a, b) => a.priority - b.priority);
         break;
-      case "hrrn":
-        // Cannot sort here as response ratio is dynamic
-        break;
       case "mlq":
         sortedQueue.sort((a, b) => a.priority - b.priority);
         break;
@@ -485,7 +482,6 @@ const UI = {
       srt: "Shortest Remaining Time (SRT)",
       priority: "Priority Scheduling",
       "round-robin": "Round Robin",
-      hrrn: "Highest Response Ratio Next (HRRN)",
       mlq: "Multi-Level Queue (MLQ)",
     };
 
@@ -510,8 +506,6 @@ const UI = {
 
       "round-robin":
         "Each process gets a small time slice (quantum) in circular order. Good for time-sharing systems and better response time.",
-
-      hrrn: "Non-preemptive algorithm that selects process with highest response ratio: (waiting time + burst time) / burst time. Balances between SJF and FCFS.",
 
       mlq: "Processes are assigned to different queues based on priority. Higher priority queues are serviced first, using FCFS within each queue.",
     };
