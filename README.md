@@ -127,10 +127,7 @@ flowchart TD
 5. **Round Robin:**  
    Each process gets a small time slice (quantum) in a circular order. Good for time-sharing systems and better response time.
 
-6. **HRRN (Highest Response Ratio Next):**  
-   Non-preemptive algorithm that selects the process with the highest response ratio: (waiting time + burst time) / burst time. Balances between SJF and FCFS.
-
-7. **MLQ (Multi-Level Queue):**  
+6. **MLQ (Multi-Level Queue):**  
    Processes are assigned to different queues based on priority. Higher priority queues are serviced first, using FCFS within each queue.
 
 ## API Simulation
