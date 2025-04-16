@@ -24,7 +24,7 @@ Welcome to the ProcessOptimizeAI Dashboard project. This tool simulates and visu
 This project demonstrates CPU process scheduling methods, allowing users to:
 
 - View processes, their attributes (burst time, arrival time, priority, etc.), and scheduling details.
-- Simulate execution using seven different scheduling algorithms including FCFS, SJF, SRT, Priority, Round Robin, HRRN, and MLQ.
+- Simulate execution using seven different scheduling algorithms including FCFS, SJF, SRT, Priority, Round Robin, and MLQ.
 - Toggle preemptive mode for applicable algorithms.
 - Observe metrics such as average waiting time, turnaround time, throughput, CPU utilization, and context switches.
 - Leverage AI suggestions for potential optimizations.
